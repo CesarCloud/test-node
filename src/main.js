@@ -1,7 +1,12 @@
 const http=require('http');
 
 const server =http.createServer((request,response)=>{
-    response.write('hello~');
+    console.log(request.headers['user-agent']);
+    
+    response.writeHead(200,{
+        'Content-Type':'text/html',
+    });
+    response.write(`<input />`);
     response.end();
 });
 
