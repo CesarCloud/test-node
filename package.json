@@ -1,10 +1,10 @@
 {
-  "name": "asd",
+  "name": "cd-node",
   "version": "1.0.0",
-  "description": "asdf",
-  "main": "adf",
+  "description": "",
+  "main": "",
   "scripts": {
-    "test": "adsf"
+    "start:dev":"tsc-watch --onSuccess \"node dist/main.js\""
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/express": "^4.17.3",
     "@types/node": "^16.4.10",
+    "tsc-watch": "^4.2.3",
     "typescript": "^3.8.3"
   }
 }
