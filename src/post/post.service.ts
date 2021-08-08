@@ -1,4 +1,5 @@
 import {connection} from '../app/database/mysql';
+import { PostModel } from './post.model';
 
 
 /**
@@ -20,5 +21,37 @@ export const getPosts =async ()=>{
         ON user.id=post.userId
     `;
     const [data]=await connection.promise().query(statement);
+    return data;
+}
+
+/**
+ * 创建内容
+ */
+export const createPost =async(post:PostModel)=>{
+    const statement=`
+    INSERT INTO post
+    SET?
+    `;
+    //执行查询
+    const [data]=await connection.promise().query(statement,post);
+    //提供数据
+    return data;
+};
+
+/**
+ * 更新内容 
+ */
+export const updatePost =async (postId:number,post:PostModel)=>{
+    //准备查询
+    const statement=`
+    UPDATE post
+    SET ?
+    WHERE id = ?
+    `;
+
+    //执行查询
+
+    const [data] =await connection.promise().query(statement,[post,postId]);
+    //提供数据
     return data;
 }
