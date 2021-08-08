@@ -18,4 +18,4 @@ export const {APP_PORT}=process.env;
     MYSQL_USER,
     MYSQL_PASSWORD,
     MYSQL_DATABASE,
-}= process.env;
+} = process.env;
