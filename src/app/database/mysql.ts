@@ -6,7 +6,6 @@ import{
     MYSQL_PASSWORD,
     MYSQL_DATABASE,
 } from '../../app/app.config';
-
 /**
  * 创建数据服务连接
  */
