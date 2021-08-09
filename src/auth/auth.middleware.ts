@@ -24,7 +24,7 @@ import bcrypt from 'bcrypt';
     if (!user) return next(new Error('USER_DOES_NOT_EXIST'));
   
     // 验证用户密码
-    const matched = await bcrypt.compare(password, user.password);
+    const matched = await bcrypt.compareSync (password, user.password);
     if (!matched) return next(new Error('PASSWORD_DOES_NOT_MATCH'));
     
     //下一步
