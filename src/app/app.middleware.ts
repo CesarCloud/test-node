@@ -44,7 +44,11 @@ export const defaultErrorHandler=(
         case 'USER_DOES_NOT_EXIST':
             statusCode=400;
             message='用户不存在';
-            break;       
+            break;   
+        case 'PASSWORD_DOES_NOT_MATCH':
+            statusCode=400;
+            message='密码不对';
+            break;      
         default:
             statusCode=500;
             message='服务出了点问题';
