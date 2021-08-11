@@ -56,6 +56,7 @@ export const updatePost =async (postId:number,post:PostModel)=>{
     return data;
 }
 
+
 /**
  * 删除内容
  */
