@@ -52,6 +52,10 @@ export const defaultErrorHandler=(
         case 'UNAUTHORIZED':
             statusCode=401;
             message='请先登录';
+            break; 
+        case 'USER_DOES_NOT_OWN_RESOURCE':
+            statusCode=403;
+            message='对不起，权限不够';
             break;       
         default:
             statusCode=500;
