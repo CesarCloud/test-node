@@ -1,4 +1,4 @@
-import { Request,Response,NextFunction, response } from "express";
+import { Request,Response,NextFunction } from "express";
 import { signToken } from './auth.service';
 
 /**
@@ -30,5 +30,6 @@ export const validate=(
     response:Response,
     next:NextFunction
 )=>{
+    console.log(request.user);
     response.sendStatus(200);
 };
