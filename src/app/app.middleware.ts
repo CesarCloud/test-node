@@ -68,7 +68,11 @@ export const defaultErrorHandler=(
         case 'POST_ALLREADY_HAS_THIS_TAG':
             statusCode=400;
             message='内容已经有这个标签';
-            break;       
+            break;
+        case 'UNABLE_TO_REPLY_THIS_COMMENT':
+            statusCode=400;
+            message='无法回复这条评论';
+            break;        
         default:
             statusCode=500;
             message='服务出了点问题';
