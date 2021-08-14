@@ -62,3 +62,25 @@ export const serve = async (
       next(error);
     }
   };
+
+  /**
+   * 文件信息
+   */
+  export const metadata= async(
+      request:Request,
+      response:Response,
+      next:NextFunction
+  )=>{
+      //文件ID
+      const {fileId}=request.params;
+      try {
+        //查询文件
+        const file=await findFileById(parseInt(fileId,10));
+        //准备响应数据
+        const data =_.pick(file,['id','size','width','height','metadata']);
+        //做出响应
+        response.send(data);
+      } catch (error) {
+        next(error);
+      }
+  };
