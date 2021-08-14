@@ -27,7 +27,8 @@ import {createFile, findFileById} from './file.service';
         const data =await createFile({
             ...fileInfo,
             userId,
-            postId: parseInt(`${postId}`, 10)
+            postId: parseInt(`${postId}`, 10),
+            ...request.fileMetaData
         })
         //做出响应
         response.status(201).send(data);
