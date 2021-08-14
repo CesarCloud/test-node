@@ -64,7 +64,11 @@ export const defaultErrorHandler=(
         case 'TAG_ALLREADY_EXISTS':
             statusCode=400;
             message='标签已存在';
-            break;          
+            break;   
+        case 'POST_ALLREADY_HAS_THIS_TAG':
+            statusCode=400;
+            message='内容已经有这个标签';
+            break;       
         default:
             statusCode=500;
             message='服务出了点问题';
