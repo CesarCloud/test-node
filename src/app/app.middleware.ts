@@ -56,6 +56,10 @@ export const defaultErrorHandler=(
         case 'USER_DOES_NOT_OWN_RESOURCE':
             statusCode=403;
             message='对不起，权限不够';
+            break; 
+        case 'FILE_NOT_FOUND':
+            statusCode=404;
+            message='文件不存在';
             break;       
         default:
             statusCode=500;
