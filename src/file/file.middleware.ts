@@ -1,6 +1,7 @@
 import { Request,Response,NextFunction } from 'express';
 import  multer from 'multer';
 import Jimp from 'jimp';
+import { imageResizer } from './file.service';
 
 /**
  * 创建一个Multer
@@ -41,6 +42,8 @@ export const fileInterceptor =fileUpload.single('file');
         height:imageSize.height,
         metadata: JSON.stringify(tags)
     }
+    //调整图像尺寸
+    imageResizer(image,request.file);
     //下一步
     next();
 };
