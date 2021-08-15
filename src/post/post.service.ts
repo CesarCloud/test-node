@@ -1,26 +1,50 @@
+import exp from 'constants';
 import {connection} from '../app/database/mysql';
 import { PostModel } from './post.model';
+import { sqlFragment } from './post.provider';
 
 
 /**
  * 获取内容列表
  */
+export interface GetPostsOptionsFilter{
+    name:string;
+    sql?:string;
+    param?:string;
+}
 
-export const getPosts =async ()=>{
+interface GetPostsOptions{
+    sort?:string;
+    filter?:GetPostsOptionsFilter;
+}
+
+export const getPosts =async (options:GetPostsOptions)=>{
+    const {sort,filter}=options;
+
+    //SQL参数
+    let params:Array<any>=[];
+    //设置SQL参数
+    if(filter.param){
+        params=[filter.param,...params];
+    }
     const statement=`
     SELECT
         post.id,
         post.title,
         post.content,
-        JSON_OBJECT(
-            'id', user.id,
-            'name',user.name
-        )
+        ${sqlFragment.user},
+        ${sqlFragment.totalComments},
+        ${sqlFragment.file},
+        ${sqlFragment.tags}
     FROM post
-    LEFT JOIN user
-        ON user.id=post.userId
+        ${sqlFragment.leftJoinUser}
+        ${sqlFragment.leftJionOneFile}
+        ${sqlFragment.leftJoinTag}
+    WHERE ${filter.sql}
+    GROUP BY post.id
+    ORDER BY ${sort}
     `;
-    const [data]=await connection.promise().query(statement);
+    const [data]=await connection.promise().query(statement,params);
     return data;
 }
 
