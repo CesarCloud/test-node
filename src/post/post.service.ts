@@ -39,11 +39,13 @@ export const getPosts =async (options:GetPostsOptions)=>{
         ${sqlFragment.user},
         ${sqlFragment.totalComments},
         ${sqlFragment.file},
-        ${sqlFragment.tags}
+        ${sqlFragment.tags},
+        ${sqlFragment.totalLikes}
     FROM post
         ${sqlFragment.leftJoinUser}
         ${sqlFragment.leftJionOneFile}
         ${sqlFragment.leftJoinTag}
+        ${filter.name='userLiked'? sqlFragment.innerJoinUserLikePost:''}
     WHERE ${filter.sql}
     GROUP BY post.id
     ORDER BY ${sort}
@@ -169,6 +171,7 @@ export const postHasTag =async(
         ${sqlFragment.leftJoinUser}
         ${sqlFragment.leftJionOneFile}
         ${sqlFragment.leftJoinTag}
+        ${filter.name='userLiked'? sqlFragment.innerJoinUserLikePost:''}
         WHERE ${filter.sql}
     `;
     //执行查询
