@@ -72,7 +72,11 @@ export const defaultErrorHandler=(
         case 'UNABLE_TO_REPLY_THIS_COMMENT':
             statusCode=400;
             message='无法回复这条评论';
-            break;        
+            break;  
+        case 'FILE_TYPE_NOT_ACCEPT':
+            statusCode=400;
+            message='不能上传此类型文件';
+            break;      
         default:
             statusCode=500;
             message='服务出了点问题';
