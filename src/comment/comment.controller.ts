@@ -1,5 +1,5 @@
 import {Request,Response,NextFunction} from 'express';
-import { createComment,isReplyComment ,updateComment,deleteComment,getComments} from './comment.service';
+import { createComment,isReplyComment ,updateComment,deleteComment,getComments, getCommentsTotalCount, getCommentReplies} from './comment.service';
 
 /**
  * 发表评论
@@ -115,11 +115,40 @@ import { createComment,isReplyComment ,updateComment,deleteComment,getComments} 
     response:Response,
     next:NextFunction
 )=>{
+    //统计评论数量
+    try {
+        const totalCount =await getCommentsTotalCount({filter:request.filter});
+        //设置响应头部
+        response.header('X-Total_Count',totalCount);
+    } catch (error) {
+        next(error);
+    }
     //获取评论列表
     try {
-        const comments= await getComments({filter:request.filter});
+        const comments= await getComments({filter:request.filter,pagination:request.pagination});
         //做出响应
         response.send(comments);
+    } catch (error) {
+        next(error);
+    }
+};
+/**
+ * 回复列表
+ */
+ export const indexReplies= async(
+    request:Request,
+    response:Response,
+    next:NextFunction
+)=>{
+    //准备数据
+    const {commentId}=request.params;
+    //获取评论回复列表
+    try {
+        const replies =await getCommentReplies({
+            commentId:parseInt(commentId,10),
+        });
+        //做出响应
+        response.send(replies);
     } catch (error) {
         next(error);
     }

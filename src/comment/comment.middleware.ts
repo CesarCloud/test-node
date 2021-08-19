@@ -24,6 +24,22 @@ import { Request,Response,NextFunction } from 'express';
             param: post as string,
         };
     }
+    //用户的评论
+    if(user && action=='published' && !post){
+        request.filter={
+            name:'userPublished',
+            sql:'comment.parentId IS NULL AND comment.userId= ?',
+            param:user as string,
+        };
+    }
+    //用户的回复
+    if(user && action =='replied' && !post){
+        request.filter={
+            name:'userReplied',
+            sql:'comment.parentId IS NOT NULL AND comment.userId = ?',
+            param:user as string,
+        }
+    }
     //下一步
     next();
 };
