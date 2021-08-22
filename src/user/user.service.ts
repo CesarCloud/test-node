@@ -81,3 +81,20 @@ export const getUserById = getUser('user.id');
     // 提供数据
     return data;
   };
+
+  /**
+   * 删除用户
+   */
+   export const deleteUser= async(
+    userId:number
+  )=>{
+    //准备查询
+    const statement=`
+      DELETE FROM user
+      WHERE id=?    
+    `;
+    //执行查询
+    const [data]=await connection.promise().query(statement,userId);
+    //提供数据
+    return data;    
+  };
