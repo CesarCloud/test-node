@@ -1,0 +1,4 @@
+{
+    "extends":"./tsconfig.json",
+    "exclude":["node_moudles","test","dist","**/*.spec.ts","**/*.test.ts"]
+}
