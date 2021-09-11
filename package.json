@@ -8,8 +8,8 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "test": "jest",
     "test:watch": "jest --watch",
-    "prebuild":"rimraf dist",
-    "build":"tsc -p tsconfig.build.json"
+    "prebuild": "rimraf dist",
+    "build": "tsc -p tsconfig.build.json"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "bcrypt": "^4.0.1",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "jimp": "^0.10.0",
     "jsonwebtoken": "^8.5.1",
