@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { PostStatus } from './post.service';
 
 /**
  * 排序方式
@@ -123,4 +124,58 @@ export const paginate = (itemsPerPage: number) => {
     request.pagination = { limit, offset };
     next();
   };
+};
+/**
+ * 验证内容状态
+ */
+export const validatePostStatus = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  const { status = '' } = request.query;
+  //检查内容状态是否有效
+  const isValidStatus = ['published', 'draft', 'archived', ''].includes(
+    status as string,
+  );
+  if (!isValidStatus) {
+    next(new Error('BAD_REQUEST'));
+  } else {
+    next();
+  }
+};
+
+/**
+ * 模式切换器
+ */
+export const modeSwitcher = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  //解构查询符
+  let { manage, admin } = request.query;
+  //管理模式
+  const isManageMode = manage === 'true';
+  //管理员模式
+  const isAdminMode = isManageMode && admin === 'true' && request.user.id === 1;
+  if (isManageMode) {
+    if (isAdminMode) {
+      request.filter = {
+        name: 'adminManagePosts',
+        sql: 'post.id IS NOT NULL',
+        param: '',
+      };
+    } else {
+      request.filter = {
+        name: 'adminManagePosts',
+        sql: 'user.id=?',
+        param: `${request.user.id}`,
+      };
+    }
+  } else {
+    //普通模式
+    request.query.status = PostStatus.published;
+  }
+  next();
 };
