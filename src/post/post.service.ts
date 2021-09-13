@@ -1,4 +1,3 @@
-import exp from 'constants';
 import { TokenPayload } from 'src/auth/auth.interface';
 import { connection } from '../app/database/mysql';
 import { PostModel } from './post.model';
@@ -11,6 +10,7 @@ export interface GetPostsOptionsFilter {
   name: string;
   sql?: string;
   param?: string;
+  params?: Array<string>;
 }
 export interface GetPostsOptionsPagination {
   limit: number;
@@ -36,6 +36,9 @@ export const getPosts = async (options: GetPostsOptions) => {
   //设置SQL参数
   if (filter.param) {
     params = [filter.param, ...params];
+  }
+  if (filter.params) {
+    params = [...filter.params, ...params];
   }
   //当前用户
   const { id: userId } = currentUser;
@@ -171,6 +174,9 @@ export const getPostsTotalCount = async (options: GetPostsOptions) => {
   const { filter } = options;
   //SQL参数
   let params = [filter.param];
+  if (filter.params) {
+    params = [...filter.params, ...params];
+  }
   //准备查询
   const statement = `
         SELECT

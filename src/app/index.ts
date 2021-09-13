@@ -9,6 +9,7 @@ import commentRouter from '../comment/comment.router';
 import avatarRouter from '../avatar/avatar.router';
 import likeRouter from '../like/like.router';
 import appRouter from '../app/app.router';
+import searchRouter from '../search/search.router';
 import { defaultErrorHandler } from './app.middleware';
 import { currentUser } from '../auth/auth.middleware';
 import { ALLOW_ORIGIN } from './app.config';
@@ -48,6 +49,7 @@ app.use(
   avatarRouter,
   likeRouter,
   appRouter,
+  searchRouter,
 );
 
 /**
