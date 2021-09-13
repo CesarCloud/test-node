@@ -1,72 +1,67 @@
-import { GetPostsOptionsFilter,GetPostsOptionsPagination } from '../post/post.service';
-import {connection} from '../app/database/mysql';
+import {
+  GetPostsOptionsFilter,
+  GetPostsOptionsPagination,
+} from '../post/post.service';
+import { connection } from '../app/database/mysql';
 import { CommentModel } from './comment.model';
 import { sqlFragment } from './comment.provider';
 
 /**
  * 创建评论
  */
-export const createComment =async(
-    comment:CommentModel
-)=>{
-    //准备查询
-    const statement=`
+export const createComment = async (comment: CommentModel) => {
+  //准备查询
+  const statement = `
         INSERT INTO comment
         SET ?
     `;
-    //执行查询
-    const [data]=await connection.promise().query(statement,comment);
-    //提供数据
-    return data;
+  //执行查询
+  const [data] = await connection.promise().query(statement, comment);
+  //提供数据
+  return data as any;
 };
 /**
  * 检查评论是否为回复
  */
- export const isReplyComment= async(
-  commentId:number
-)=>{
+export const isReplyComment = async (commentId: number) => {
   //准备查询
-  const statement=`
+  const statement = `
     SELECT parentId FROM comment
     WHERE id=?
   `;
   //执行查询
-  const [data] = await connection.promise().query(statement,commentId);
+  const [data] = await connection.promise().query(statement, commentId);
   //提供数据
-  return data[0].parentId ? true:false;
+  return data[0].parentId ? true : false;
 };
 /**
  * 修改评论
  */
- export const updateComment= async(
-  comment:CommentModel
-)=>{
+export const updateComment = async (comment: CommentModel) => {
   //准备数据
-  const {id, content}=comment;
+  const { id, content } = comment;
   //准备查询
-  const statement=`
+  const statement = `
     UPDATE comment
     SET  content=?
     WHERE id=?
   `;
   //执行查询
-  const [data]=await connection.promise().query(statement,[content,id]);
+  const [data] = await connection.promise().query(statement, [content, id]);
   //提供数据
   return data;
 };
 /**
  * 删除评论
  */
- export const deleteComment= async(
-  commentId:number
-)=>{
+export const deleteComment = async (commentId: number) => {
   //准备查询
-  const statement=`
+  const statement = `
     DELETE FROM comment
     WHERE id = ?
   `;
   //执行查询
-  const [data]=await connection.promise().query(statement,commentId);
+  const [data] = await connection.promise().query(statement, commentId);
   //提供数据
   return data;
 };
@@ -74,23 +69,24 @@ export const createComment =async(
 /**
  * 获取评论列表
  */
-interface GetCommentsOptions{
-  filter?:GetPostsOptionsFilter
-  pagination?:GetPostsOptionsPagination;
+interface GetCommentsOptions {
+  filter?: GetPostsOptionsFilter;
+  pagination?: GetPostsOptionsPagination;
 }
- export const getComments= async(
-  options:GetCommentsOptions
-)=>{
+export const getComments = async (options: GetCommentsOptions) => {
   //解构选择器
-  const {filter,pagination:{limit,offset}}=options;
-    //SQL参数
-    let params:Array<any>=[limit,offset];
-    //设置SQL参数
-    if(filter.param){
-      params=[filter.param,...params];
-    }
+  const {
+    filter,
+    pagination: { limit, offset },
+  } = options;
+  //SQL参数
+  let params: Array<any> = [limit, offset];
+  //设置SQL参数
+  if (filter.param) {
+    params = [filter.param, ...params];
+  }
   //准备查询
-  const statement=`
+  const statement = `
     SELECT 
       comment.id,
       comment.content,
@@ -111,26 +107,24 @@ interface GetCommentsOptions{
     OFFSET ?
   `;
   //执行查询
-  const [data]=await connection.promise().query(statement,params);
+  const [data] = await connection.promise().query(statement, params);
   //提供数据
   return data;
 };
 /**
  * 统计评论数量
  */
-export const getCommentsTotalCount=async(
-  options:GetCommentsOptions
-)=>{
+export const getCommentsTotalCount = async (options: GetCommentsOptions) => {
   //解构选项
-  const {filter}=options;
+  const { filter } = options;
   //SQL参数
-  let params:Array<any>=[];
+  let params: Array<any> = [];
   //设置SQL参数
-  if(filter.param){
-    params=[filter.param, ...params];
+  if (filter.param) {
+    params = [filter.param, ...params];
   }
   //准备查询
-  const statement=`
+  const statement = `
     SELECT
       COUNT(
         DISTINCT comment.id
@@ -143,7 +137,7 @@ export const getCommentsTotalCount=async(
       ${filter.sql}
   `;
   //执行查询
-  const [data]=await connection.promise().query(statement,params);
+  const [data] = await connection.promise().query(statement, params);
   //提供结果
   return data[0].total;
 };
@@ -151,14 +145,14 @@ export const getCommentsTotalCount=async(
 /**
  * 评论回复列表
  */
-interface GetCommentRepliesOptions{
-  commentId:number;
+interface GetCommentRepliesOptions {
+  commentId: number;
 }
-export const getCommentReplies=async(options:GetCommentRepliesOptions)=>{
+export const getCommentReplies = async (options: GetCommentRepliesOptions) => {
   //解构选项
-  const {commentId}=options;
+  const { commentId } = options;
   //准备查询
-  const statement=`
+  const statement = `
     SELECT
       comment.id,
       comment.content,
@@ -172,7 +166,43 @@ export const getCommentReplies=async(options:GetCommentRepliesOptions)=>{
       comment.id
   `;
   //执行查询
-  const [data]=await  connection.promise().query(statement,commentId);
+  const [data] = await connection.promise().query(statement, commentId);
   //提供数据
   return data;
+};
+
+/**
+ * 按ID调取评论或回复
+ */
+interface GetCommentByIdOptions {
+  resourceType?: string;
+}
+export const getCommentById = async (
+  commentId: number,
+  options: GetCommentByIdOptions = {},
+) => {
+  //解构选型
+  const { resourceType = 'comment' } = options;
+  //SQL参数
+  const params: Array<any> = [commentId];
+  //准备查询
+  const statement = `
+    SELECT
+      comment.id,
+      comment.content,
+      ${sqlFragment.user},
+      ${sqlFragment.post},
+      ${resourceType === 'reply' ? `,${sqlFragment.repliedComment}` : ''}
+      ${resourceType === 'comment' ? `,${sqlFragment.totalReplies}` : ''}
+    FROM
+      comment
+      ${sqlFragment.leftJoinUser}
+      ${sqlFragment.leftJoinPost}
+    WHERE
+      comment.id=?
+  `;
+  //执行查询
+  const [data] = await connection.promise().query(statement, params);
+  //提供数据
+  return data[0] as any;
 };
