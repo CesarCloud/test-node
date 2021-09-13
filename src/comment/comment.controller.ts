@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { socketIoServer } from 'src/app/app.service';
+import { socketIoServer } from '../app/app.service';
 import {
   createComment,
   isReplyComment,

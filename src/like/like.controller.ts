@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { partial } from 'lodash';
-import { socketIoServer } from 'src/app/app.service';
+import { socketIoServer } from '../app/app.service';
 import { createUserLikePost, deleteUserLikePost } from './like.service';
 
 /**
