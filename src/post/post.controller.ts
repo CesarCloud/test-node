@@ -17,7 +17,7 @@ import { createTag, getTagByName } from '../tag/tag.service';
 import { deletePostFiles, getPostFiles } from '../file/file.service';
 import { authGuard } from '../auth/auth.middleware';
 import { AuditLogStatus } from '../audit-log/audit-log.model';
-import { getAuditLogByResource } from 'src/audit-log/audit-log.service';
+import { getAuditLogByResource } from '../audit-log/audit-log.service';
 /**
  * 内容列表
  */
