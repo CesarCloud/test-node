@@ -97,4 +97,27 @@ export const sqlFragment = {
       INNER JOIN user_like_post
         ON user_like_post.postId=post.id
   `,
+  leftJoinOneAuditLog: `
+      LEFT JOIN LATERAL (
+        SELECT *
+        FROM audit_log
+        WHERE audit_log.resourceId = post.id
+        ORDER BY audit_log.id DESC
+        LIMIT 1
+      ) AS audit ON post.id=audit.resourceId
+  `,
+  audit: `
+        CAST(
+          IF(
+            COUNT(audit.id),
+            GROUP_CONCAT(
+              DISTINCT JSON_OBJECT(
+                'id',audit.id,
+                'status',audit.status
+              )
+            ),
+            NULL
+          )AS JSON
+        )AS audit
+  `,
 };
