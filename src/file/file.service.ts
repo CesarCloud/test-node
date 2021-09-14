@@ -5,8 +5,8 @@ import { connection } from '../app/database/mysql';
 import { FileModel } from './file.model';
 import { TokenPayload } from '../auth/auth.interface';
 import { getPostById, PostStatus } from '../post/post.service';
-import { getAuditLogByResource } from 'src/audit-log/audit-log.service';
-import { AuditLogStatus } from 'src/audit-log/audit-log.model';
+import { getAuditLogByResource } from '../audit-log/audit-log.service';
+import { AuditLogStatus } from '../audit-log/audit-log.model';
 
 /**
  * 存储文件信息
