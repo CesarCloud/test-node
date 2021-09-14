@@ -29,7 +29,7 @@ export const index = async (
     //统计内容数量
     const totalCount = await getPostsTotalCount({
       filter: request.filter,
-      //status,
+      status: status as PostStatus,
     });
     //设置响应头部
     response.header('X-Total-Count', totalCount);
@@ -42,7 +42,7 @@ export const index = async (
       filter: request.filter,
       pagination: request.pagination,
       currentUser: request.user,
-      //status,
+      status: status as PostStatus,
     });
     response.send(posts);
   } catch (error) {
@@ -191,11 +191,21 @@ export const show = async (
 ) => {
   //准备数据
   const { postId } = request.params;
+  const { user: currentUser } = request;
   //调取内容
   try {
     const post = await getPostById(parseInt(postId, 10), {
       currentUser: request.user,
     });
+    //检查权限
+    const ownPost = post.user.id === currentUser.id;
+    const isAdmin = currentUser.id === 1;
+    const isPublished = post.status === PostStatus.published;
+    const canAccess = isAdmin || ownPost || isPublished;
+
+    if (!canAccess) {
+      throw new Error('FORBIDDEN');
+    }
     //做出响应
     response.send(post);
   } catch (error) {
