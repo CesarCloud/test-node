@@ -9,6 +9,7 @@ import {
   modeSwitcher,
 } from './post.middleware';
 import { POSTS_PER_PAGE } from '../app/app.config';
+import { accessLog } from '../access-log/access-log.middleware';
 
 const router = express.Router();
 
@@ -22,13 +23,23 @@ router.get(
   paginate(POSTS_PER_PAGE),
   validatePostStatus,
   modeSwitcher,
+  accessLog({ action: 'getPosts', resourceType: 'post' }),
   postController.index,
 );
 
 /**
  * 创建内容
  */
-router.post('/posts', authGuard, postController.store);
+router.post(
+  '/posts',
+  authGuard,
+  accessLog({
+    action: 'createPost',
+    resourceType: 'post',
+    payloadParam: 'body.title',
+  }),
+  postController.store,
+);
 
 /**
  * 更新内容
@@ -37,6 +48,12 @@ router.patch(
   '/posts/:postId',
   authGuard,
   accessControl({ possession: true }),
+  validatePostStatus,
+  accessLog({
+    action: 'updatePost',
+    resourceType: 'post',
+    resourceParamName: 'postId',
+  }),
   postController.update,
 );
 
@@ -47,6 +64,11 @@ router.delete(
   '/posts/:postId',
   authGuard,
   accessControl({ possession: true }),
+  accessLog({
+    action: 'deletePost',
+    resourceType: 'post',
+    resourceParamName: 'postId',
+  }),
   postController.destroy,
 );
 /**
@@ -56,6 +78,12 @@ router.post(
   '/posts/:postId/tag',
   authGuard,
   accessControl({ possession: true }),
+  accessLog({
+    action: 'createPostTag',
+    resourceType: 'post',
+    resourceParamName: 'postId',
+    payloadParam: 'body.name',
+  }),
   postController.stortPostTag,
 );
 /**
@@ -65,6 +93,12 @@ router.delete(
   '/posts/:postId/tag',
   authGuard,
   accessControl({ possession: true }),
+  accessLog({
+    action: 'deletePostTag',
+    resourceType: 'post',
+    resourceParamName: 'postId',
+    payloadParam: 'body.tagId',
+  }),
   postController.destroyPostTag,
 );
 /**
