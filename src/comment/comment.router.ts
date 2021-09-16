@@ -4,7 +4,7 @@ import * as commentController from './comment.controller';
 import { filter } from './comment.middleware';
 import { paginate } from '../post/post.middleware';
 import { COMMENTS_PER_PAGE } from '../app/app.config';
-import { accessLog } from 'src/access-log/access-log.middleware';
+import { accessLog } from '../access-log/access-log.middleware';
 
 const router = express.Router();
 /**
