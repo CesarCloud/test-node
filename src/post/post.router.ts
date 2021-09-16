@@ -104,7 +104,15 @@ router.delete(
 /**
  * 单个内容
  */
-router.get('/posts/:postId', postController.show);
+router.get(
+  '/posts/:postId',
+  accessLog({
+    action: 'getPostById',
+    resourceType: 'post',
+    resourceParamName: 'postId',
+  }),
+  postController.show,
+);
 /**
  * 导出路由
  */
